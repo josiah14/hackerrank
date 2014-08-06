@@ -9,6 +9,6 @@ outputFile :: IO (FilePath)
 outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
-main = let content = inputFile >>= readFile
+main = let content = readFile =<< inputFile
        in join $ writeFile <$> outputFile <*> content
 
