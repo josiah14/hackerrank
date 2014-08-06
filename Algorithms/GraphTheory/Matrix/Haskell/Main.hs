@@ -1,10 +1,14 @@
 import System.Environment
+import Control.Applicative
+import Control.Monad
+
+inputFile :: IO (FilePath)
+inputFile = head <$> getArgs
+
+outputFile :: IO (FilePath)
+outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
-main =do
-  cliArgs <- getArgs
-  let inputFile = head cliArgs
-      outputFile = cliArgs!!1
-  contents <- readFile inputFile
-  writeFile outputFile contents
+main = let content = inputFile >>= readFile
+       in join $ writeFile <$> outputFile <*> content
 
