@@ -20,14 +20,17 @@ K lines follow, each containing an integer. The ith integer is the id of the cit
 Print in a single line the minimum time required to disrupt the connection among Machines.
 
 ## Constraints
+```
 2 <= N <= 100,000
 
 2 <= K <= N
 
 1 <= time to destroy a road <= 1000,000
+```
 
 ## Sample Input
 
+```
 5 3
 2 1 8
 1 0 5
@@ -36,9 +39,9 @@ Print in a single line the minimum time required to disrupt the connection among
 2
 4
 0
+```
 
 ## Sample Output
-
 10
 
 ## Explanation
