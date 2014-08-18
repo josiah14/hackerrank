@@ -4,7 +4,7 @@ import Control.Monad
 import Data.Word
 
 -- Type definitions
-newtype City a = City a
+newtype CityCount a = CityCount Word
 
 maxCities :: Word
 maxCities = 100000
@@ -12,43 +12,72 @@ maxCities = 100000
 minCities :: Word
 minCities = 2
 
-toCity :: (Word a, Ord a) => a -> a -> City a
-toCity city numCities
-  | city < minCities = error "The number of cities cannot be less than " ++ (read minCities) ++ "."
-  | city > maxCities = error "The number of cities cannot be greater than " ++ (read maxCities) ++ "."
-  | otherwise = City city
+toCityCount :: Word -> (CityCount Word)
+toCityCount count
+  | count < minCities = error $ "The number of cities cannot be less than " ++ (show minCities) ++ "."
+  | count > maxCities = error $ "The number ofd cities cannot be greater than " ++ (show maxCities) ++ "."
+  | otherwise = CityCount count
 
-fromCity :: City a -> a
-fromCity (City city) = city
+fromCityCount :: CityCount Word -> Word
+fromCityCount (CityCount count) = count
 
 
-newtype Machine a = Machine a
-
-maxMachines :: City Word -> Word
-maxMachines = maxCities
+newtype MachineCount a = MachineCount Word
 
 minMachines :: Word
 minMachines = minCities
 
-toMachine :: (Word a, Ord a) => a -> a -> a -> Machine a
-toMachine machine numMachines numCities
-  | machine < minMachines = error "The number of machines cannot be less than " ++ (read minMachines) ++ "."
-  | machine > maxMachines = error "The number of machines cannot be greater than " ++ (read maxMachines) ++ "."
-  | otherwise = Machine machine
+toMachineCount :: Word -> CityCount Word -> MachineCount Word
+toMachineCount count (CityCount numCities)
+  | count < minMachines = error $ "The number of machines cannot be less than " ++ (show minMachines) ++ "."
+  | count > numCities = error "The number of machines cannot exceed the number of cities."
+  | otherwise = MachineCount count
 
-fromMachine :: Machine a -> a
-fromMachine (Machine machine) = machine
+fromMachineCount :: MachineCount Word -> Word
+fromMachineCount (MachineCount count) = count
 
 
-newtype Road a = Road a
+type City = Word
+type Cities = [City]
 
-maxRoads :: City Word -> Word
-maxRoads numCities = (fromCity numCities) - 1
+type Machine = Word
+type Machines = [Machine]
+
+
+newtype RoadDestroyTime a = RoadDestroyTime Word
+
+minDestroyTime :: Word
+minDestroyTime = 1
+
+maxDestroyTime :: Word
+maxDestroyTime = 1000000
+
+toRoadDestroyTime :: Word -> RoadDestroyTime Word
+toRoadDestroyTime time
+  | time < minDestroyTime = error $ "The destroy time for a road cannot be less than " ++ (show minDestroyTime) ++ "."
+  | time > maxDestroyTime = error $ "The max destroy time for a road cannot be greater than " ++ (show maxDestroyTime)
+                              ++ "."
+  | otherwise = RoadDestroyTime time
+
+
+data Road = Road { city0 :: City
+                 , city1 :: City
+                 , destroyTime :: RoadDestroyTime Word
+                 }
+
+toRoad :: (City, City, RoadDestroyTime Word) -> Road
+toRoad (city0, city1, destroyTime) = Road city0 city1 destroyTime
+
+fromRoad :: Road -> (City, City, RoadDestroyTime Word)
+fromRoad (Road city0 city1 destroyTime) = (city0, city1, destroyTime)
+
+type Roads = [Road]
+
+maxRoads :: CityCount Word -> Word
+maxRoads numCities = (fromCityCount numCities) - 1
 
 minRoads :: Word
 minRoads = minCities - 1
-
-toRoad
 
 -- Core logic
 
@@ -62,5 +91,6 @@ main :: IO ()
 main = let content = readFile =<< inputFile
        in join $ writeFile <$> outputFile <*> content
 
-parseInput :: String -> (N Word, K Word, )
+parseInput :: String -> (CityCount Word, MachineCount Word, Cities, Roads, Machines)
+parseInput input = (toCityCount 3, toMachineCount 2 (toCityCount 3), [0, 1, 2], map toRoad [(0, 1, toRoadDestroyTime 1), (0, 2, toRoadDestroyTime 5)], [0, 2])
 
