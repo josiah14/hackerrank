@@ -2,6 +2,9 @@ import System.Environment
 import Control.Applicative
 import Control.Monad
 import Data.Word
+import Data.List.Split
+import qualified Data.Text as T
+import Development.Placeholders
 
 -- Type definitions
 newtype CityCount a = CityCount Word
@@ -91,6 +94,15 @@ main :: IO ()
 main = let content = readFile =<< inputFile
        in join $ writeFile <$> outputFile <*> content
 
-parseInput :: String -> (CityCount Word, MachineCount Word, Cities, Roads, Machines)
-parseInput input = (toCityCount 3, toMachineCount 2 (toCityCount 3), [0, 1, 2], map toRoad [(0, 1, toRoadDestroyTime 1), (0, 2, toRoadDestroyTime 5)], [0, 2])
+parseInput' :: String -> (CityCount Word, MachineCount Word, Cities, Roads, Machines)
+parseInput' input = (toCityCount 3, toMachineCount 2 (toCityCount 3), [0, 1, 2], map toRoad [(0, 1, toRoadDestroyTime 1), (0, 2, toRoadDestroyTime 5)], [0, 2])
+
+splitLines :: T.Text -> [T.Text]
+splitLines = (map T.strip) . (T.splitOn $ T.pack "\n")
+
+splitNumbers :: [T.Text] -> [[T.Text]]
+splitNumbers = map $ T.splitOn $ T.pack " "
+
+parseInput :: [[T.Text]] -> (CityCount Word, MachineCount Word, Cities, Roads, Machines)
+parseInput = error undefined
 
