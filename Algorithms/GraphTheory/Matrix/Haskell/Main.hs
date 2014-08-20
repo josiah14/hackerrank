@@ -7,7 +7,7 @@ import qualified Data.Text as T
 import Development.Placeholders
 
 -- Type definitions
-newtype CityCount a = CityCount Word
+newtype CityCount a = CityCount Word deriving Show
 
 maxCities :: Word
 maxCities = 100000
@@ -25,7 +25,7 @@ fromCityCount :: CityCount Word -> Word
 fromCityCount (CityCount count) = count
 
 
-newtype MachineCount a = MachineCount Word
+newtype MachineCount a = MachineCount Word deriving Show
 
 minMachines :: Word
 minMachines = minCities
@@ -47,7 +47,7 @@ type Machine = Word
 type Machines = [Machine]
 
 
-newtype RoadDestroyTime a = RoadDestroyTime Word
+newtype RoadDestroyTime a = RoadDestroyTime Word deriving Show
 
 minDestroyTime :: Word
 minDestroyTime = 1
@@ -66,7 +66,7 @@ toRoadDestroyTime time
 data Road = Road { city0 :: City
                  , city1 :: City
                  , destroyTime :: RoadDestroyTime Word
-                 }
+                 } deriving Show
 
 toRoad :: (City, City, RoadDestroyTime Word) -> Road
 toRoad (city0, city1, destroyTime) = Road city0 city1 destroyTime
