@@ -8,55 +8,75 @@ import Development.Placeholders
 import Data.List
 
 -- Type definitions
-newtype CityCount a = CityCount Word deriving Show
+newtype CityCount a = CityCount Int deriving (Show, Eq, Ord)
 
-maxCities :: Word
+maxCities :: Int
 maxCities = 100000
 
-minCities :: Word
+minCities :: Int
 minCities = 2
 
-toCityCount :: Word -> CityCount Word
+toCityCount :: Int -> CityCount Int
 toCityCount count
   | count < minCities = error $ "The number of cities cannot be less than " ++ show minCities ++ "."
   | count > maxCities = error $ "The number ofd cities cannot be greater than " ++ show maxCities ++ "."
   | otherwise = CityCount count
 
-fromCityCount :: CityCount Word -> Word
+fromCityCount :: CityCount Int -> Int
 fromCityCount (CityCount count) = count
 
 
-newtype MachineCount a = MachineCount Word deriving Show
+newtype MachineCount a = MachineCount Int deriving (Show, Eq, Ord)
 
-minMachines :: Word
+minMachines :: Int
 minMachines = minCities
 
-toMachineCount :: Word -> CityCount Word -> MachineCount Word
+toMachineCount :: Int -> CityCount Int -> MachineCount Int
 toMachineCount count (CityCount numCities)
   | count < minMachines = error $ "The number of machines cannot be less than " ++ show minMachines ++ "."
   | count > numCities = error "The number of machines cannot exceed the number of cities."
   | otherwise = MachineCount count
 
-fromMachineCount :: MachineCount Word -> Word
+fromMachineCount :: MachineCount Int -> Int
 fromMachineCount (MachineCount count) = count
 
 
-type City = Word
+type City = Int
 type Cities = [City]
 
-type Machine = Word
-type Machines = [Machine]
+newtype Machine a = Machine Int deriving (Show, Eq, Ord)
+
+toMachine :: CityCount Int -> Int -> Machine Int
+toMachine (CityCount numCities) machine
+  | machine < 0 = error "Negative numbers are not allowed for a machine's resident city."
+  | machine > numCities - 1 = error $ "The max number of cities is " ++ show numCities
+                                      ++ " but the resident city of the machine is outside that bound at "
+                                      ++ show machine ++ "."
+  | otherwise = Machine machine
+
+fromMachine :: Machine Int -> Int
+fromMachine (Machine machine) = machine
 
 
-newtype RoadDestroyTime a = RoadDestroyTime Word deriving Show
+newtype Machines a = Machines [Machine Int] deriving (Show, Eq, Ord)
 
-minDestroyTime :: Word
+toMachines :: (MachineCount Int) -> [Machine Int] -> Machines [Machine Int]
+toMachines (MachineCount count) machineList
+  | length machineList /= fromIntegral count = error "The number of machines specified does not match the number provided."
+  | otherwise = Machines machineList
+
+fromMachines :: Machines [Machine Int] -> [Int]
+fromMachines (Machines machines) = map fromMachine machines
+
+newtype RoadDestroyTime a = RoadDestroyTime Int deriving (Show, Eq, Ord)
+
+minDestroyTime :: Int
 minDestroyTime = 1
 
-maxDestroyTime :: Word
+maxDestroyTime :: Int
 maxDestroyTime = 1000000
 
-toRoadDestroyTime :: Word -> RoadDestroyTime Word
+toRoadDestroyTime :: Int -> RoadDestroyTime Int
 toRoadDestroyTime time
   | time < minDestroyTime = error $ "The destroy time for a road cannot be less than " ++ show minDestroyTime ++ "."
   | time > maxDestroyTime = error $ "The max destroy time for a road cannot be greater than " ++ show maxDestroyTime
@@ -64,24 +84,26 @@ toRoadDestroyTime time
   | otherwise = RoadDestroyTime time
 
 
-data Road = Road { city0 :: City
-                 , city1 :: City
-                 , destroyTime :: RoadDestroyTime Word
+data Road = Road { cities :: (City, City)
+                 , destroyTime :: RoadDestroyTime Int
                  } deriving Show
 
-toRoad :: ((City, City), RoadDestroyTime Word) -> Road
-toRoad ((city0, city1), destroyTime) = Road city0 city1 destroyTime
+toRoad :: ((City, City), RoadDestroyTime Int) -> Road
+toRoad (cities, destroyTime) = Road cities destroyTime
 
-fromRoad :: Road -> (City, City, RoadDestroyTime Word)
-fromRoad (Road city0 city1 destroyTime) = (city0, city1, destroyTime)
+fromRoad :: Road -> ((City, City), RoadDestroyTime Int)
+fromRoad (Road cities destroyTime) = (cities, destroyTime)
 
-type Roads = [Road]
 
-maxRoads :: CityCount Word -> Word
-maxRoads numCities = fromCityCount numCities - 1
+newtype Roads a = Roads [Road]
 
-minRoads :: Word
-minRoads = minCities - 1
+numRoads :: CityCount Int -> Int
+numRoads numCities = fromCityCount numCities - 1
+
+toRoads :: (CityCount Int) -> [Road] -> Roads [Road]
+toRoads cityCount roads
+  | length roads /= numRoads cityCount = error "The number of roads must be 1 less than the number of total cities."
+  | otherwise = Roads roads
 
 -- Core logic
 
@@ -101,18 +123,20 @@ splitLines = map T.strip . T.splitOn  (T.pack "\n")
 splitNumbers :: [T.Text] -> [[T.Text]]
 splitNumbers = map $ T.splitOn $ T.pack " "
 
-readNumbers :: [[T.Text]] -> [[Word]]
+readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
 
-parseInput :: String -> (CityCount Word, MachineCount Word, Cities, Roads, Machines)
+parseInput :: String -> (CityCount Int, MachineCount Int, Cities, Roads [Road], Machines [Machine Int])
 parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pack $ st
                     counts = head parsedInput
                     cityCount = toCityCount $ head counts
                     machineCount = toMachineCount (last counts) cityCount
                     cities = [0..fromCityCount cityCount - 1]
-                    roads = map toRoad $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ triple!!2))
-                                             (tail (take (fromIntegral $ fromCityCount cityCount) parsedInput))
-                    machines = sort $ flatten $ drop (fromIntegral $ fromCityCount cityCount) parsedInput
+                    roads = toRoads cityCount
+                              $ map toRoad
+                              $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ triple!!2))
+                                    (tail (take (fromCityCount cityCount) parsedInput))
+                    machines = toMachines machineCount $ map (toMachine cityCount) $ sort $ flatten $ drop (fromCityCount cityCount) parsedInput
                 in (cityCount, machineCount, cities, roads, machines)
                 where flatten = map head
 
