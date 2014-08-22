@@ -95,7 +95,7 @@ fromRoad :: Road -> ((City, City), RoadDestroyTime Int)
 fromRoad (Road cities destroyTime) = (cities, destroyTime)
 
 
-newtype Roads a = Roads [Road]
+newtype Roads a = Roads [Road] deriving Show
 
 numRoads :: CityCount Int -> Int
 numRoads numCities = fromCityCount numCities - 1
@@ -115,10 +115,10 @@ outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
 main = let content = readFile =<< inputFile
-       in join $ writeFile <$> outputFile <*> content
+       in join $ writeFile <$> outputFile <*> (show . parseInput <$> content)
 
 splitLines :: T.Text -> [T.Text]
-splitLines = map T.strip . T.splitOn  (T.pack "\n")
+splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn  (T.pack "\n")
 
 splitNumbers :: [T.Text] -> [[T.Text]]
 splitNumbers = map $ T.splitOn $ T.pack " "

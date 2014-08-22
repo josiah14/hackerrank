@@ -1,9 +1,1 @@
-5 3
-2 1 8
-1 0 5
-2 4 5
-1 3 4
-2
-4
-0
-
+(CityCount 5,MachineCount 3,[0,1,2,3,4],Roads [Road {cities = (2,1), destroyTime = RoadDestroyTime 8},Road {cities = (1,0), destroyTime = RoadDestroyTime 5},Road {cities = (2,4), destroyTime = RoadDestroyTime 5},Road {cities = (1,3), destroyTime = RoadDestroyTime 4}],Machines [Machine 0,Machine 2,Machine 4])
