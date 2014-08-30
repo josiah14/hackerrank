@@ -19,7 +19,7 @@ minCities = 2
 toCityCount :: Int -> CityCount Int
 toCityCount count
   | count < minCities = error $ "The number of cities cannot be less than " ++ show minCities ++ "."
-  | count > maxCities = error $ "The number ofd cities cannot be greater than " ++ show maxCities ++ "."
+  | count > maxCities = error $ "The number of cities cannot be greater than " ++ show maxCities ++ "."
   | otherwise = CityCount count
 
 fromCityCount :: CityCount Int -> Int
@@ -83,6 +83,9 @@ toRoadDestroyTime time
                               ++ "."
   | otherwise = RoadDestroyTime time
 
+fromRoadDestroyTime :: RoadDestroyTime Int -> Int
+fromRoadDestroyTime (RoadDestroyTime time) = time
+
 
 data Road = Road { cities :: (City, City)
                  , destroyTime :: RoadDestroyTime Int
@@ -105,6 +108,9 @@ toRoads cityCount roads
   | length roads /= numRoads cityCount = error "The number of roads must be 1 less than the number of total cities."
   | otherwise = Roads roads
 
+fromRoads :: Roads [Road] -> [Road]
+fromRoads (Roads roads) = roads
+
 -- Core logic
 
 inputFile :: IO FilePath
@@ -118,7 +124,7 @@ main = let content = readFile =<< inputFile
        in join $ writeFile <$> outputFile <*> (show . parseInput <$> content)
 
 splitLines :: T.Text -> [T.Text]
-splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn  (T.pack "\n")
+splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn (T.pack "\n")
 
 splitNumbers :: [T.Text] -> [[T.Text]]
 splitNumbers = map $ T.splitOn $ T.pack " "
@@ -133,10 +139,17 @@ parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pa
                     machineCount = toMachineCount (last counts) cityCount
                     cities = [0..fromCityCount cityCount - 1]
                     roads = toRoads cityCount
-                              $ map toRoad
-                              $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ triple!!2))
-                                    (tail (take (fromCityCount cityCount) parsedInput))
-                    machines = toMachines machineCount $ map (toMachine cityCount) $ sort $ flatten $ drop (fromCityCount cityCount) parsedInput
+                            $ map toRoad
+                            $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ triple!!2))
+                                  (tail (take (fromCityCount cityCount) parsedInput))
+                    machines = toMachines machineCount
+                               $ map (toMachine cityCount)
+                               $ sort $ flatten $ drop (fromCityCount cityCount) parsedInput
                 in (cityCount, machineCount, cities, roads, machines)
                 where flatten = map head
+
+findPath :: City -> City -> Roads [Road] -> [((City, City), Int)]
+findPath city0 city1 cityGrid = let roads = map (\(cities, time) -> (cities, fromRoadDestroyTime time))
+                                            $ map fromRoad $ fromRoads cityGrid
+                                in roads
 
