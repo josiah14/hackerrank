@@ -5,7 +5,7 @@ import Data.Word
 import Data.List.Split
 import qualified Data.Text as T
 import Development.Placeholders
-import Data.List
+import Data.List as L
 
 -- Type definitions
 newtype CityCount a = CityCount Int deriving (Show, Eq, Ord)
@@ -111,6 +111,21 @@ toRoads cityCount roads
 fromRoads :: Roads [Road] -> [Road]
 fromRoads (Roads roads) = roads
 
+newtype KingdomTree a = KingdomTree [(City, [Road])]
+
+toKingdomTree :: Roads [Road] -> Cities -> KingdomTree [(City, [Road])]
+toKingdomTree (Roads roads) cities = KingdomTree $ buildTree roads cities
+  where buildTree roads cities =
+          if null cities then []
+          else let currentCity = head cities
+                   restOfCities = tail cities
+                   (connectedRoads, unconnectedRoads) = L.partition (connects currentCity) roads
+               in (currentCity, connectedRoads):(buildTree unconnectedRoads restOfCities)
+        connects c (Road cityPair _) = c == fst cityPair || c == snd cityPair
+
+rotateKingdom :: KingdomTree [(City, [Road])] -> KingdomTree [(City, [Road])]
+rotateKingdom kingdom = kingdom
+
 -- Core logic
 
 inputFile :: IO FilePath
@@ -148,8 +163,11 @@ parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pa
                 in (cityCount, machineCount, cities, roads, machines)
                 where flatten = map head
 
-findPath :: City -> City -> Roads [Road] -> [((City, City), Int)]
-findPath city0 city1 cityGrid = let roads = map (\(cities, time) -> (cities, fromRoadDestroyTime time))
-                                            $ map fromRoad $ fromRoads cityGrid
-                                in roads
+-- findPath :: City -> City -> Roads [Road] -> [((City, City), Int)]
+-- findPath startCity endCity cityGrid = let roads = map (\(cities, time) -> (cities, fromRoadDestroyTime time))
+--                                             $ map fromRoad $ fromRoads cityGrid
+--                                 in roads
+--                                 where linksCity0 r = let c1 = fst $ fst r
+--                                                          c2 = snd $ fst r
+--                                                      in c1 == startCity || c2 == city0
 
