@@ -113,18 +113,23 @@ fromRoads (Roads roads) = roads
 
 newtype KingdomTree a = KingdomTree [(City, [Road])]
 
-toKingdomTree :: Roads [Road] -> Cities -> KingdomTree [(City, [Road])]
-toKingdomTree (Roads roads) cities = KingdomTree $ buildTree roads cities
-  where buildTree roads cities =
-          if null cities then []
-          else let currentCity = head cities
-                   restOfCities = tail cities
-                   (connectedRoads, unconnectedRoads) = L.partition (connects currentCity) roads
-               in (currentCity, connectedRoads):(buildTree unconnectedRoads restOfCities)
-        connects c (Road cityPair _) = c == fst cityPair || c == snd cityPair
+-- This creates a traversable tree of the Kingdom's city grid.
+-- The data formate is an array of 2 element tuples with the
+-- representations as [(City, roadsConnectedToCity)]
+toKingdomTree :: Roads [Road] -> KingdomTree [(City, [Road])]
+toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 roads -- start with city 0 every time.
+  where buildTree city roads =
+          let (connectedRoads, unconnectedRoads) = L.partition (connects city) roads
+          in if null connectedRoads then []
+             else (city, connectedRoads) -- first element of the returned list
+                  :(concat $ map (\road -> buildTree (otherCity road) $ road:unconnectedRoads) connectedRoads) -- the rest of the returned list
+          where otherCity (Road cities _) = if city == fst cities then snd cities else fst cities
+                connects c (Road cityPair _) = c == fst cityPair || c == snd cityPair
 
-rotateKingdom :: KingdomTree [(City, [Road])] -> KingdomTree [(City, [Road])]
-rotateKingdom kingdom = kingdom
+-- This rotates the traversable tree of the Kingdom's city grid such that
+-- the city passed in becomes the root node of the entire tree.
+rotateKingdom :: KingdomTree [(City, City, [Road])] -> City -> KingdomTree [(City, City, [Road])]
+rotateKingdom kingdom city = kingdom
 
 -- Core logic
 
