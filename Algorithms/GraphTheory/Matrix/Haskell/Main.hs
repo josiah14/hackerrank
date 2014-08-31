@@ -111,25 +111,23 @@ toRoads cityCount roads
 fromRoads :: Roads [Road] -> [Road]
 fromRoads (Roads roads) = roads
 
-newtype KingdomTree a = KingdomTree [(City, [Road])]
+newtype KingdomTree a = KingdomTree [(City, [Road])] deriving Show
 
 -- This creates a traversable tree of the Kingdom's city grid.
 -- The data formate is an array of 2 element tuples with the
 -- representations as [(City, roadsConnectedToCity)]
 toKingdomTree :: Roads [Road] -> KingdomTree [(City, [Road])]
-toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 roads -- start with city 0 every time.
-  where buildTree city roads =
-          let (connectedRoads, unconnectedRoads) = L.partition (connects city) roads
+toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 (-1) roads -- start with city 0 every time.
+  where buildTree currentCity previousCity roads =
+          let (connectedRoads, unconnectedRoads) = L.partition (connects currentCity) roads
           in if null connectedRoads then []
-             else (city, connectedRoads) -- first element of the returned list
-                  :(concat $ map (\road -> buildTree (otherCity road) $ road:unconnectedRoads) connectedRoads) -- the rest of the returned list
-          where otherCity (Road cities _) = if city == fst cities then snd cities else fst cities
+             else (currentCity, connectedRoads) -- first element of the returned list
+                  :(concat $ map (\road -> let city = otherCity road
+                                           in if city == previousCity then []
+                                              else (buildTree city currentCity $ road:unconnectedRoads))
+                                 connectedRoads) -- the rest of the returned list
+          where otherCity (Road cities _) = if currentCity == fst cities then snd cities else fst cities
                 connects c (Road cityPair _) = c == fst cityPair || c == snd cityPair
-
--- This rotates the traversable tree of the Kingdom's city grid such that
--- the city passed in becomes the root node of the entire tree.
-rotateKingdom :: KingdomTree [(City, City, [Road])] -> City -> KingdomTree [(City, City, [Road])]
-rotateKingdom kingdom city = kingdom
 
 -- Core logic
 
@@ -141,7 +139,10 @@ outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
 main = let content = readFile =<< inputFile
-       in join $ writeFile <$> outputFile <*> (show . parseInput <$> content)
+       in join $ writeFile <$> outputFile <*> (show . getKingdom . parseInput <$> content)
+
+getKingdom :: (CityCount Int, MachineCount Int, Cities, Roads [Road], Machines [Machine Int]) -> KingdomTree [(City, [Road])]
+getKingdom (_, _, _, roads, _) = toKingdomTree roads
 
 splitLines :: T.Text -> [T.Text]
 splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn (T.pack "\n")
