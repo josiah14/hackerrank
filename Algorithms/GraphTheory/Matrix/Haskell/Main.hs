@@ -175,30 +175,30 @@ parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pa
                 where flatten = map head
 
 findPath :: City -> City -> [(City, [Road])] -> Maybe [Road]
-findPath startCity endCity kingdom = let (activeNode, restOfKingdom) = findKingdomNode startCity kingdom
-                                     in if (null restOfKingdom) || (null $ snd activeNode) then Nothing
-                                        else let endNode = reachedEnd $ snd activeNode
-                                             in if Nothing == endNode
-                                             then let path = head $ catMaybes
-                                                             $ map (\road -> findPath (otherCity road) endCity restOfKingdom)
-                                                                   $ snd activeNode
-                                                      adjacentRoads = snd activeNode
-                                                      linksToJoiningRoad adjacentRoad =
-                                                            let jointCity = otherCity adjacentRoad
-                                                            in (jointCity == (fst $ cities $ head path))
-                                                               || (jointCity == (snd $ cities $ head path))
-                                                      newRoad = find linksToJoiningRoad adjacentRoads
-                                                  in case newRoad of Just road -> Just (road:path)
-                                                                     Nothing   -> Nothing
-                                             else Just $ maybeToList endNode
-                                     where otherCity (Road cities _) =
-                                             if startCity == fst cities then snd cities else fst cities
-                                           reachedEnd roads = listToMaybe $ catMaybes
-                                                              $ map (\(Road cities time) ->
-                                                                        if endCity == fst cities || endCity == snd cities
-                                                                        then Just (toRoad (cities, time))
-                                                                        else Nothing)
-                                                                    roads
+findPath startCity endCity kingdom =
+  let (activeNode, restOfKingdom) = findKingdomNode startCity kingdom
+  in if (null restOfKingdom) || (null $ snd activeNode) then Nothing
+     else if Nothing == (reachedEnd $ snd activeNode)
+          then let path = catMaybes
+                          $ map (\road -> findPath (otherCity road) endCity restOfKingdom)
+                                $ snd activeNode
+                   adjacentRoads = snd activeNode
+                   linksToJoiningRoad adjacentRoad = let jointCity = otherCity adjacentRoad
+                                                     in (jointCity == (fst . cities . head $ head path))
+                                                        || (jointCity == (snd . cities . head $ head path))
+                   newRoad = find linksToJoiningRoad adjacentRoads
+               in case null $ head path of False -> case newRoad of Just road -> Just $ road:(head $ path)
+                                                                    Nothing   -> Nothing
+                                           True  -> Nothing
+          else Just . maybeToList . reachedEnd $ snd activeNode
+  where otherCity (Road cities _) =
+          if startCity == fst cities then snd cities else fst cities
+        reachedEnd roads = listToMaybe $ catMaybes
+                           $ map (\(Road cities time) ->
+                                     if endCity == fst cities || endCity == snd cities
+                                     then Just (toRoad (cities, time))
+                                     else Nothing)
+                                 roads
 
 -- The input validations should make it nearly impossible for this function
 -- to be provided with a city that does not exist in the provided kingdom
