@@ -1,11 +1,12 @@
 import System.Environment
 import Control.Applicative
 import Control.Monad
-import Data.Word
 import Data.List.Split
 import qualified Data.Text as T
 import Development.Placeholders
 import Data.List as L
+import Data.Int
+import Data.Maybe
 
 -- Type definitions
 newtype CityCount a = CityCount Int deriving (Show, Eq, Ord)
@@ -68,33 +69,33 @@ toMachines (MachineCount count) machineList
 fromMachines :: Machines [Machine Int] -> [Int]
 fromMachines (Machines machines) = map fromMachine machines
 
-newtype RoadDestroyTime a = RoadDestroyTime Int deriving (Show, Eq, Ord)
+newtype RoadDestroyTime a = RoadDestroyTime Int64 deriving (Show, Eq, Ord)
 
-minDestroyTime :: Int
+minDestroyTime :: Int64
 minDestroyTime = 1
 
-maxDestroyTime :: Int
+maxDestroyTime :: Int64
 maxDestroyTime = 1000000
 
-toRoadDestroyTime :: Int -> RoadDestroyTime Int
+toRoadDestroyTime :: Int64 -> RoadDestroyTime Int64
 toRoadDestroyTime time
   | time < minDestroyTime = error $ "The destroy time for a road cannot be less than " ++ show minDestroyTime ++ "."
   | time > maxDestroyTime = error $ "The max destroy time for a road cannot be greater than " ++ show maxDestroyTime
                               ++ "."
   | otherwise = RoadDestroyTime time
 
-fromRoadDestroyTime :: RoadDestroyTime Int -> Int
+fromRoadDestroyTime :: RoadDestroyTime Int64 -> Int64
 fromRoadDestroyTime (RoadDestroyTime time) = time
 
 
 data Road = Road { cities :: (City, City)
-                 , destroyTime :: RoadDestroyTime Int
-                 } deriving Show
+                 , destroyTime :: RoadDestroyTime Int64
+                 } deriving (Show, Eq)
 
-toRoad :: ((City, City), RoadDestroyTime Int) -> Road
+toRoad :: ((City, City), RoadDestroyTime Int64) -> Road
 toRoad (cities, destroyTime) = Road cities destroyTime
 
-fromRoad :: Road -> ((City, City), RoadDestroyTime Int)
+fromRoad :: Road -> ((City, City), RoadDestroyTime Int64)
 fromRoad (Road cities destroyTime) = (cities, destroyTime)
 
 
@@ -119,15 +120,20 @@ newtype KingdomTree a = KingdomTree [(City, [Road])] deriving Show
 toKingdomTree :: Roads [Road] -> KingdomTree [(City, [Road])]
 toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 (-1) roads -- start with city 0 every time.
   where buildTree currentCity previousCity roads =
-          let (connectedRoads, unconnectedRoads) = L.partition (connects currentCity) roads
+          let (connectedRoads, unconnectedRoads) = L.partition connectsToCurrentCity roads
           in if null connectedRoads then []
-             else (currentCity, connectedRoads) -- first element of the returned list
-                  :(concat $ map (\road -> let city = otherCity road
-                                           in if city == previousCity then []
-                                              else (buildTree city currentCity $ road:unconnectedRoads))
-                                 connectedRoads) -- the rest of the returned list
-          where otherCity (Road cities _) = if currentCity == fst cities then snd cities else fst cities
-                connects c (Road cityPair _) = c == fst cityPair || c == snd cityPair
+             else (currentCity, connectedRoads):(concat $ map (buildSubTree unconnectedRoads) connectedRoads)
+          where otherCity (Road cities _) =
+                  if currentCity == fst cities then snd cities else fst cities
+                connectsToCurrentCity (Road cities _) =
+                  currentCity == fst cities || currentCity == snd cities
+                buildSubTree unconnectedRoads road =
+                  let city = otherCity road
+                  in if city == previousCity then []
+                     else buildTree city currentCity $ road:unconnectedRoads
+
+fromKingdomTree :: KingdomTree [(City, [Road])] -> [(City, [Road])]
+fromKingdomTree (KingdomTree kingdom) = kingdom
 
 -- Core logic
 
@@ -139,10 +145,8 @@ outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
 main = let content = readFile =<< inputFile
-       in join $ writeFile <$> outputFile <*> (show . getKingdom . parseInput <$> content)
-
-getKingdom :: (CityCount Int, MachineCount Int, Cities, Roads [Road], Machines [Machine Int]) -> KingdomTree [(City, [Road])]
-getKingdom (_, _, _, roads, _) = toKingdomTree roads
+       in join $ writeFile <$> outputFile <*> (show . fourth . parseInput <$> content)
+         where fourth (_, _, _, kingdom, _) = kingdom
 
 splitLines :: T.Text -> [T.Text]
 splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn (T.pack "\n")
@@ -153,27 +157,56 @@ splitNumbers = map $ T.splitOn $ T.pack " "
 readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
 
-parseInput :: String -> (CityCount Int, MachineCount Int, Cities, Roads [Road], Machines [Machine Int])
+parseInput :: String -> (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int])
 parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pack $ st
                     counts = head parsedInput
                     cityCount = toCityCount $ head counts
                     machineCount = toMachineCount (last counts) cityCount
                     cities = [0..fromCityCount cityCount - 1]
-                    roads = toRoads cityCount
-                            $ map toRoad
-                            $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ triple!!2))
-                                  (tail (take (fromCityCount cityCount) parsedInput))
+                    kingdom = toKingdomTree
+                              $ toRoads cityCount
+                              $ map toRoad
+                              $ map (\triple -> ((head triple, triple!!1), toRoadDestroyTime $ fromIntegral $ triple!!2))
+                                    $ tail $ take (fromCityCount cityCount) parsedInput
                     machines = toMachines machineCount
                                $ map (toMachine cityCount)
-                               $ sort $ flatten $ drop (fromCityCount cityCount) parsedInput
-                in (cityCount, machineCount, cities, roads, machines)
+                                     $ sort $ flatten $ drop (fromCityCount cityCount) parsedInput
+                in (cityCount, machineCount, cities, kingdom, machines)
                 where flatten = map head
 
--- findPath :: City -> City -> Roads [Road] -> [((City, City), Int)]
--- findPath startCity endCity cityGrid = let roads = map (\(cities, time) -> (cities, fromRoadDestroyTime time))
---                                             $ map fromRoad $ fromRoads cityGrid
---                                 in roads
---                                 where linksCity0 r = let c1 = fst $ fst r
---                                                          c2 = snd $ fst r
---                                                      in c1 == startCity || c2 == city0
+findPath :: City -> City -> [(City, [Road])] -> Maybe [Road]
+findPath startCity endCity kingdom = let (activeNode, restOfKingdom) = findKingdomNode startCity kingdom
+                                     in if (null restOfKingdom) || (null $ snd activeNode) then Nothing
+                                        else let endNode = reachedEnd $ snd activeNode
+                                             in if Nothing == endNode
+                                             then let path = head $ catMaybes
+                                                             $ map (\road -> findPath (otherCity road) endCity restOfKingdom)
+                                                                   $ snd activeNode
+                                                      adjacentRoads = snd activeNode
+                                                      linksToJoiningRoad adjacentRoad =
+                                                            let jointCity = otherCity adjacentRoad
+                                                            in (jointCity == (fst $ cities $ head path))
+                                                               || (jointCity == (snd $ cities $ head path))
+                                                      newRoad = find linksToJoiningRoad adjacentRoads
+                                                  in case newRoad of Just road -> Just (road:path)
+                                                                     Nothing   -> Nothing
+                                             else Just $ maybeToList endNode
+                                     where otherCity (Road cities _) =
+                                             if startCity == fst cities then snd cities else fst cities
+                                           reachedEnd roads = listToMaybe $ catMaybes
+                                                              $ map (\(Road cities time) ->
+                                                                        if endCity == fst cities || endCity == snd cities
+                                                                        then Just (toRoad (cities, time))
+                                                                        else Nothing)
+                                                                    roads
+
+-- The input validations should make it nearly impossible for this function
+-- to be provided with a city that does not exist in the provided kingdom
+-- partial.
+findKingdomNode :: City -> [(City, [Road])] -> ((City, [Road]), [(City, [Road])])
+findKingdomNode topCity partialKingdom =
+  let (beforeMatched, afterMatched) = L.break matchesTopCity partialKingdom
+  in if null afterMatched then (((-1), []), partialKingdom)
+     else ((head afterMatched), beforeMatched ++ tail afterMatched)
+  where matchesTopCity node = topCity == fst node
 
