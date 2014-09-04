@@ -172,7 +172,7 @@ solve (_, _, cities, kingdom, machines) =
   let destroyedRoads = let paths = let machinePairs = allDistinctPairs $ fromMachines machines
                                         where allDistinctPairs list = [(x,y) | (x:xt) <- L.tails list, y <- xt]
                                    in catMaybes $ map (\cityPair -> findPath (fst cityPair) (snd cityPair)
-                                                  $ fromKingdomTree kingdom) machinePairs
+                                                      $ fromKingdomTree kingdom) machinePairs
                        in unique $ map (foldl1 findCheapestRoad) $ paths
                        where findCheapestRoad road0 road1 =
                                let getDestroyTime = fromRoadDestroyTime . destroyTime
