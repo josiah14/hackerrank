@@ -1,1 +1,1 @@
-[Road {cities = (1,0), destroyTime = RoadDestroyTime 5},Road {cities = (2,1), destroyTime = RoadDestroyTime 8},Road {cities = (2,4), destroyTime = RoadDestroyTime 5}]
+10

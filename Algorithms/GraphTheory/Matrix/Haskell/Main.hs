@@ -1,9 +1,7 @@
 import System.Environment
 import Control.Applicative
 import Control.Monad
-import Data.List.Split
 import qualified Data.Text as T
-import Development.Placeholders
 import Data.List as L
 import Data.Int
 import Data.Maybe
@@ -98,6 +96,12 @@ toRoad (cities, destroyTime) = Road cities destroyTime
 fromRoad :: Road -> ((City, City), RoadDestroyTime Int64)
 fromRoad (Road cities destroyTime) = (cities, destroyTime)
 
+sumRoadDestroyTimes :: [Road] -> Int64
+sumRoadDestroyTimes roads = foldl1 (+) $ map (fromRoadDestroyTime . destroyTime) roads
+
+instance Ord Road where
+  compare (Road _ time0) (Road _ time1) = compare (fromRoadDestroyTime time0) $ fromRoadDestroyTime time1
+
 
 newtype Roads a = Roads [Road] deriving Show
 
@@ -119,8 +123,8 @@ newtype KingdomTree a = KingdomTree [(City, [Road])] deriving Show
 -- representations as [(City, roadsConnectedToCity)]
 toKingdomTree :: Roads [Road] -> KingdomTree [(City, [Road])]
 toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 (-1) roads -- start with city 0 every time.
-  where buildTree currentCity previousCity roads =
-          let (connectedRoads, unconnectedRoads) = L.partition connectsToCurrentCity roads
+  where buildTree currentCity previousCity remainingRoads =
+          let (connectedRoads, unconnectedRoads) = L.partition connectsToCurrentCity remainingRoads
           in if null connectedRoads then []
              else (currentCity, connectedRoads):(concat $ map (buildSubTree unconnectedRoads) connectedRoads)
           where otherCity (Road cities _) =
@@ -134,6 +138,13 @@ toKingdomTree (Roads roads) = KingdomTree $ buildTree 0 (-1) roads -- start with
 
 fromKingdomTree :: KingdomTree [(City, [Road])] -> [(City, [Road])]
 fromKingdomTree (KingdomTree kingdom) = kingdom
+
+findKingdomNode :: City -> [(City, [Road])] -> ((City, [Road]), [(City, [Road])])
+findKingdomNode topCity partialKingdom =
+  let (beforeMatched, afterMatched) = L.break matchesTopCity partialKingdom
+  in if null afterMatched then (((-1), []), partialKingdom)
+     else ((head afterMatched), beforeMatched ++ tail afterMatched)
+  where matchesTopCity node = topCity == fst node
 
 -- Core logic
 
@@ -156,8 +167,18 @@ splitNumbers = map $ T.splitOn $ T.pack " "
 readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
 
-solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> [Road]
-solve (cityCount, machineCount, cities, kingdom, machines) = fromMaybe [] $ findPath 0 4 $ fromKingdomTree kingdom
+solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> Int64
+solve (_, _, cities, kingdom, machines) =
+  let destroyedRoads = let paths = let machinePairs = allDistinctPairs $ fromMachines machines
+                                        where allDistinctPairs list = [(x,y) | (x:xt) <- L.tails list, y <- xt]
+                                   in catMaybes $ map (\cityPair -> findPath (fst cityPair) (snd cityPair)
+                                                  $ fromKingdomTree kingdom) machinePairs
+                       in unique $ map (foldl1 findCheapestRoad) $ paths
+                       where findCheapestRoad road0 road1 =
+                               let getDestroyTime = fromRoadDestroyTime . destroyTime
+                               in if getDestroyTime road0 < getDestroyTime road1 then road0 else road1
+                             unique = map head . group . sort
+  in sumRoadDestroyTimes destroyedRoads
 
 parseInput :: String -> (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int])
 parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pack $ st
@@ -197,14 +218,4 @@ findPath startCity endCity kingdom =
             let roadContainsEndCity road =
                   if endCity == (fst $ cities road) || endCity == (snd $ cities road) then Just road else Nothing
             in listToMaybe . catMaybes $ map roadContainsEndCity roads
-
--- The input validations should make it nearly impossible for this function
--- to be provided with a city that does not exist in the provided kingdom
--- partial.
-findKingdomNode :: City -> [(City, [Road])] -> ((City, [Road]), [(City, [Road])])
-findKingdomNode topCity partialKingdom =
-  let (beforeMatched, afterMatched) = L.break matchesTopCity partialKingdom
-  in if null afterMatched then (((-1), []), partialKingdom)
-     else ((head afterMatched), beforeMatched ++ tail afterMatched)
-  where matchesTopCity node = topCity == fst node
 
