@@ -145,8 +145,7 @@ outputFile = flip (!!) 1 <$> getArgs
 
 main :: IO ()
 main = let content = readFile =<< inputFile
-       in join $ writeFile <$> outputFile <*> (show . fourth . parseInput <$> content)
-         where fourth (_, _, _, kingdom, _) = kingdom
+       in join $ writeFile <$> outputFile <*> (show . solve . parseInput <$> content)
 
 splitLines :: T.Text -> [T.Text]
 splitLines = filter (T.pack "" /=) . map T.strip . T.splitOn (T.pack "\n")
@@ -156,6 +155,9 @@ splitNumbers = map $ T.splitOn $ T.pack " "
 
 readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
+
+solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> [Road]
+solve (cityCount, machineCount, cities, kingdom, machines) = fromMaybe [] $ findPath 0 4 $ fromKingdomTree kingdom
 
 parseInput :: String -> (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int])
 parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pack $ st
@@ -178,27 +180,23 @@ findPath :: City -> City -> [(City, [Road])] -> Maybe [Road]
 findPath startCity endCity kingdom =
   let (activeNode, restOfKingdom) = findKingdomNode startCity kingdom
   in if (null restOfKingdom) || (null $ snd activeNode) then Nothing
-     else if Nothing == (reachedEnd $ snd activeNode)
-          then let path = catMaybes
-                          $ map (\road -> findPath (otherCity road) endCity restOfKingdom)
-                                $ snd activeNode
-                   adjacentRoads = snd activeNode
-                   linksToJoiningRoad adjacentRoad = let jointCity = otherCity adjacentRoad
-                                                     in (jointCity == (fst . cities . head $ head path))
-                                                        || (jointCity == (snd . cities . head $ head path))
+     else case reachedEnd $ snd activeNode
+          of Just endNode -> Just [endNode]
+             Nothing ->
+               let path = head $ catMaybes $ map (\road -> findPath (otherCity road) endCity restOfKingdom) $ snd activeNode
                    newRoad = find linksToJoiningRoad adjacentRoads
-               in case null $ head path of False -> case newRoad of Just road -> Just $ road:(head $ path)
-                                                                    Nothing   -> Nothing
-                                           True  -> Nothing
-          else Just . maybeToList . reachedEnd $ snd activeNode
-  where otherCity (Road cities _) =
-          if startCity == fst cities then snd cities else fst cities
-        reachedEnd roads = listToMaybe $ catMaybes
-                           $ map (\(Road cities time) ->
-                                     if endCity == fst cities || endCity == snd cities
-                                     then Just (toRoad (cities, time))
-                                     else Nothing)
-                                 roads
+                     where adjacentRoads = snd activeNode
+                           linksToJoiningRoad adjacentRoad =
+                             (linkingCity == (fst closestPathCities)) || (linkingCity == (snd closestPathCities))
+                             where linkingCity = otherCity adjacentRoad
+                                   closestPathCities = cities $ head path
+               in if null path then Nothing
+                  else if isJust newRoad then Just $ (fromJust newRoad):path else Nothing
+    where otherCity (Road cities _) = if startCity == fst cities then snd cities else fst cities
+          reachedEnd roads =
+            let roadContainsEndCity road =
+                  if endCity == (fst $ cities road) || endCity == (snd $ cities road) then Just road else Nothing
+            in listToMaybe . catMaybes $ map roadContainsEndCity roads
 
 -- The input validations should make it nearly impossible for this function
 -- to be provided with a city that does not exist in the provided kingdom
