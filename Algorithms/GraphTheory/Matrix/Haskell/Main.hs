@@ -168,17 +168,19 @@ readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
 
 solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> Int64
-solve (_, _, cities, kingdom, machines) =
-  let destroyedRoads = let paths = let machinePairs = allDistinctPairs $ fromMachines machines
-                                        where allDistinctPairs list = [(x,y) | (x:xt) <- L.tails list, y <- xt]
-                                   in catMaybes $ map (\cityPair -> findPath (fst cityPair) (snd cityPair)
-                                                      $ fromKingdomTree kingdom) machinePairs
-                       in unique $ map (foldl1 findCheapestRoad) $ paths
-                       where findCheapestRoad road0 road1 =
-                               let getDestroyTime = fromRoadDestroyTime . destroyTime
-                               in if getDestroyTime road0 < getDestroyTime road1 then road0 else road1
-                             unique = map head . group . sort
-  in sumRoadDestroyTimes destroyedRoads
+solve (_, _, cities, kingdomTree, machines) = let machinePairs = pairUpMachines machines
+                                                  kingdom = fromKingdomTree kingdomTree
+                                              in sumRoadDestroyTimes $ roadsToDestroy machinePairs kingdom
+
+pairUpMachines :: Machines [Machine City] -> [(City, City)]
+pairUpMachines machines = allDistinctPairs $ fromMachines machines
+  where allDistinctPairs list = [(x,y) | (x:xt) <- L.tails list, y <- xt]
+
+roadsToDestroy :: [(Int, Int)] -> [(City, [Road])] -> [Road]
+roadsToDestroy machinePairs kingdom = unique $ map (foldl1 cheaperRoad) $ paths
+  where paths = catMaybes $ map (\cityPair -> findPath (fst cityPair) (snd cityPair) kingdom) machinePairs
+        unique = map head . group . sort
+        cheaperRoad road0 road1 = if road0 < road1 then road0 else road1
 
 parseInput :: String -> (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int])
 parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pack $ st
