@@ -200,24 +200,33 @@ parseInput st = let parsedInput = readNumbers . splitNumbers . splitLines . T.pa
                 where flatten = map head
 
 findPath :: City -> City -> [(City, [Road])] -> Maybe [Road]
-findPath startCity endCity kingdom =
-  let (activeNode, restOfKingdom) = findKingdomNode startCity kingdom
-  in if (null restOfKingdom) || (null $ snd activeNode) then Nothing
-     else case reachedEnd $ snd activeNode
-          of Just endNode -> Just [endNode]
-             Nothing ->
-               let path = head $ catMaybes $ map (\road -> findPath (otherCity road) endCity restOfKingdom) $ snd activeNode
-                   newRoad = find linksToJoiningRoad adjacentRoads
-                     where adjacentRoads = snd activeNode
-                           linksToJoiningRoad adjacentRoad =
-                             (linkingCity == (fst closestPathCities)) || (linkingCity == (snd closestPathCities))
-                             where linkingCity = otherCity adjacentRoad
-                                   closestPathCities = cities $ head path
-               in if null path then Nothing
-                  else if isJust newRoad then Just $ (fromJust newRoad):path else Nothing
-    where otherCity (Road cities _) = if startCity == fst cities then snd cities else fst cities
-          reachedEnd roads =
-            let roadContainsEndCity road =
-                  if endCity == (fst $ cities road) || endCity == (snd $ cities road) then Just road else Nothing
-            in listToMaybe . catMaybes $ map roadContainsEndCity roads
+findPath startCity endCity kingdom = findPath' (-1) startCity endCity kingdom
+  where findPath' previousCity startCity' endCity' kingdom' =
+          let (activeNode, restOfKingdom) = findKingdomNode startCity' kingdom'
+          in
+              if (null restOfKingdom) || (null $ snd activeNode) then Nothing
+              else
+                  let endNode = reachedEnd $ snd activeNode
+                  in
+                     if isJust endNode then Just $ maybeToList endNode
+                     else
+                       let path =
+                             let tmpPath = map (\road -> findPath' startCity (otherCity road) endCity' restOfKingdom)
+                                             $ snd activeNode
+                             in if null $ catMaybes tmpPath then [] else head $ catMaybes tmpPath
+                           adjacentRoads = filter (\road -> otherCity road /= previousCity) $ snd activeNode
+                           newRoad = find linksToJoiningRoad adjacentRoads
+                             where linksToJoiningRoad adjacentRoad =
+                                     (linkingCity == (fst closestPathCities)) || (linkingCity == (snd closestPathCities))
+                                     where linkingCity = otherCity adjacentRoad
+                                           closestPathCities = cities $ head path
+                       in if null path then Nothing
+                          else if isJust newRoad
+                               then Just $ (fromJust newRoad):path
+                               else Nothing
+            where otherCity (Road cities _) = if startCity' == fst cities then snd cities else fst cities
+                  reachedEnd roads =
+                    let roadContainsEndCity road =
+                          if endCity' == (fst $ cities road) || endCity' == (snd $ cities road) then Just road else Nothing
+                    in listToMaybe . catMaybes $ map roadContainsEndCity roads
 
