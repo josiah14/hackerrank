@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<!-- First they ignore you, then they laugh at you, then they fight you, then you win. - Mohandas Karamchand Gandhi -->
+<html lang="en">
+  <head>
+    <!-- Chartbeat Init -->
+<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+<!-- jsCookies -->
+<script type="text/javascript">
+  var jsCookies={get:function(c_name){if(document.cookie.length>0){var c_start=document.cookie.indexOf(c_name+"=");if(-1!=c_start){c_start=c_start+c_name.length+1;var c_end=document.cookie.indexOf(";",c_start);return-1==c_end&&(c_end=document.cookie.length),unescape(document.cookie.substring(c_start,c_end))}}return""},set:function(c_name,value,expiredays){var exdate=new Date;exdate.setDate(exdate.getDate()+expiredays),document.cookie=c_name+"="+escape(value)+"; path=/"+(null==expiredays?"":"; expires="+exdate.toUTCString())},check:function(c_name){return c_name=jsCookies.get(c_name),null!=c_name&&""!=c_name?!0:!1}};
+
+
+</script>
+
+<!-- CDN Failsafe -->
+<script type="text/javascript">!function(window){function sendRequest(url,callback,postData,error_callback){var req=createXMLHTTPObject();req&&(req.open("GET",url,!0),req.onreadystatechange=function(){return 4==req.readyState?200!=req.status&&304!=req.status?(error_callback(req),void 0):(callback(req),void 0):void 0},4!=req.readyState&&req.send(postData))}function createXMLHTTPObject(){for(var xmlhttp=!1,i=0;i<XMLHttpFactories.length;i++){try{xmlhttp=XMLHttpFactories[i]()}catch(e){continue}break}return xmlhttp}function set_CDN_URL(url){jsCookies.get("cdn_url")||("www.hackerrank.com"==url?cookieTimer=setTimeout(function(){jsCookies.set("cdn_url",url,1)},2e3):(cookieTimer&&(clearTimeout(cookieTimer),cookieTimer=null),jsCookies.set("cdn_url",url,1),window.document.location.reload()))}function CDNBench(url){this.url=url,this.rateCDN=function(){var url=this.url,timestamp=(new Date).getTime(),success_callback=function(){set_CDN_URL(url),console.log("timetaken for "+url+" is "+((new Date).getTime()-timestamp)+" milliseconds")},error_callback=function(){console.log("unable to reach "+url)};sendRequest("https://"+url+"/lib/checkcdn.json",success_callback,null,error_callback)}}function rate_cdn(){for(var cdn_urls=["hrcdn.net","d3keuzeb2crhkn.cloudfront.net","porsche.interviewstreet.com","www.hackerrank.com"],i=0;i<cdn_urls.length;i++)new CDNBench(cdn_urls[i]).rateCDN()}var XMLHttpFactories=[function(){return new XMLHttpRequest},function(){return new ActiveXObject("Msxml2.XMLHTTP")},function(){return new ActiveXObject("Msxml3.XMLHTTP")},function(){return new ActiveXObject("Microsoft.XMLHTTP")}];jsCookies=window.jsCookies;var cookieTimer=null;jsCookies.get("cdn_url")||rate_cdn()}(window);</script>
+
+<!-- DNS Prefetch -->
+<link rel="dns-prefetch" href="//hrcdn.net">
+<link rel="dns-prefetch" href="//d3rpyts3de3lx8.cloudfront.net">
+<link rel="dns-prefetch" href="//notifications.hackerrank.com">
+
+<!-- fragmenting for google bot -->
+<meta name="fragment" content="!">
+
+<!-- use the latest IE browser -->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+<!-- App Icon for iOS Devices -->
+<link rel="apple-touch-icon-precomposed" href="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/apple-touch-icon-precomposed-78c25a714410571342d43c61e34d9a8d.png" />
+
+<!-- favicon -->
+<link href="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+
+<!-- generating meta tags -->
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<meta charset='utf-8' />
+<meta name='description' content='Programming problems and contests in different domains of Computer Science. Solve interesting and challenging programming problems' />
+<meta property='og:title' content='HackerRank' />
+<meta property='og:image' content='https://hrcdn.net/hackerrank/assets/hackerrank_default_og.jpg' />
+<meta property='og:description' content='Where hackers hangout to solve interesting Computer Science challenges' />
+<meta property='article:author' content='https://www.facebook.com/hackerrank' />
+<meta property='fb:app_id' content='347499128655783' />
+<meta property='og:url' content='https://www.hackerrank.com/' />
+<meta property='og:site_name' content='HackerRank' />
+
+<!-- ends meta tags generation -->
+
+<!-- CSRF Token -->
+<meta content="authenticity_token" name="csrf-param" />
+<meta content="fkhlc+G1umwEzoDHw4UA86OxatfoE6q5nARjufONKoc=" name="csrf-token" />
+
+<!-- Google Analyitics Init -->
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', "UA-45092266-1"]);
+    _gaq.push(['_trackPageview']);
+    _gaq.push(['_setCampSourceKey', 'utm_source']);
+    _gaq.push(['_setCampMediumKey', 'utm_medium']);
+    _gaq.push(['_setCampContentKey', 'utm_keyword']);
+    _gaq.push(['_setCampTermKey', 'utm_keyword']);
+    _gaq.push(['_setCampNameKey', 'utm_campaign']);
+</script>
+<script>
+</script>
+<!-- Totango init -->
+<script>
+    totango = null;
+</script>
+<!-- Totango Tracking Code -->
+<!-- End Totango Tracking Code -->
+
+<!-- Mixpanel Init -->
+<script type="text/javascript">
+    var mixpanel = mixpanel || [];
+</script>
+
+<!-- Typography -->
+
+<link rel="stylesheet" type="text/css" href="https://d3keuzeb2crhkn.cloudfront.net/lib/typography/203221/hosts/https/d3keuzeb2crhkn.cloudfront.net/D945E126B6D5D4C41.css" data-noprefix />
+
+<script type="text/javascript">
+    /**
+     * Protect window.console method calls, e.g. console is not defined on IE
+     * unless dev tools are open, and IE doesn't define console.debug
+     */
+(function() {
+    if (!window.console) {
+      window.console = {};
+    }
+    var m = ["log", "info", "warn", "error", "debug", "trace", "dir", "group", "groupCollapsed", "groupEnd", "time", "timeEnd", "profile", "profileEnd", "dirxml", "assert", "count", "markTimeline", "timeStamp", "clear"];
+    // define undefined methods as noops to prevent errors
+    for (var i = 0; i < m.length; i++) {
+        if (!window.console[m[i]]) {
+            window.console[m[i]] = function() {};
+        }
+    }
+})();
+</script>
+
+<!-- Load Jquery -->
+<script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/base-ade6ee5e3de60bb58bada541abcc52db.js" type="text/javascript"></script>
+
+<!-- Errorception -->
+<script type="text/javascript">
+  (function(_,e,rr,s){_errs=[s];var c=_.onerror;_.onerror=function(){var a=arguments;_errs.push(a);
+   c&&c.apply(this,a)};var b=function(){var c=e.createElement(rr),b=e.getElementsByTagName(rr)[0];
+   c.src="//beacon.errorception.com/"+s+".js";c.async=!0;b.parentNode.insertBefore(c,b)};
+   _.addEventListener?_.addEventListener("load",b,!1):_.attachEvent("onload",b)})
+   (window,document,"script","50b78854cb2e10773a00002d");
+
+   _errs.meta = {
+       handle: 'praenato14',
+       loadTimestamp: 1409836181,
+       assetUrl: 'https://d3keuzeb2crhkn.cloudfront.net/hackerrank',
+       cdnUrl: 'd3keuzeb2crhkn.cloudfront.net'
+   };
+   _errs.allow = function (err) {
+       if (err.message === "Uncaught TypeError: Cannot read property 'frames' of undefined" &&
+           err.line === 206 &&
+           err.stack &&
+           err.stack.indexOf("TeXTheWorld") !== -1) {
+               return false;
+       }
+       return true;
+   }
+
+</script>
+
+<!-- Some Black Magic for Internet Explorer -->
+
+<!--[if lt IE 10]>
+<script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/jquery-plugins/jQuery.XDomainRequest-9b3544c0ffa4fa5a7d45baaa7e1a4980.js" type="text/javascript"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6/html5shiv.min.js" type="text/javascript"></script>
+<![endif]-->
+
+<!-- Chrome Frame for IE6 -->
+<!--[if lt IE 7 ]>
+ <script src="https://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script><script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+
+<!--[if lte IE 9]>
+<script>
+    IE_BROWSER = true
+</script>
+<![endif]-->
+
+<!-- Track button clicks -->
+<script type="text/javascript">
+    $('a, button, input').live('click', function(e) {
+        src = $(e.currentTarget);
+        if (src.attr('data-analytics')) {
+            action = 'Click'; data = src.attr('data-analytics');
+        } else {
+            return;
+        }
+
+        // mixpanel
+        mixpanel.push(['track', action, {
+            'UserName' : 'praenato14',
+            'Data' : data, 'Page' : '/',
+            'PageType' : 'HomePage',
+            'Domain': 'www.hackerrank.com'
+        }]);
+
+        // google analytics
+        _gaq.push(['_trackEvent', 'Events' , action, data])
+    });
+</script>
+
+    <!-- General Information -->
+    <title>Programming Problems and Competitions :: HackerRank</title>
+    <base href='https://www.hackerrank.com/'>
+
+    <script type="text/javascript">
+      var HR;
+      HR = window.HR || {};
+      HR.PREFETCH_DATA = {"metadata":{"asset_path":"https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets","filepicker_key":"ApehXMbvXTWqWab7OmMr9z","landing_contest_slug":"master","current_contest_namespace":"","using_contest_namespace":false,"contest_status":3},"slugs":{"master":{"type":"contest"},"praenato14":{"type":"hacker"}},"contest":{"college_public":null,"created_at":"2012-07-19T17:13:20Z","description":"","endtime":null,"expose_stats":null,"homepage":"","homepage_background_color":"","id":1,"is_rating_updated":false,"leaderboard_backend":null,"name":"Master","notification":null,"primary_track_id":null,"public":false,"rating_category":null,"slug":"master","starttime":null,"tagline":"","team_event":false,"timezone":"America/Los_Angeles","updated_at":"2014-08-19T11:34:50Z","started":true,"ended":false,"epoch_endtime":0,"epoch_starttime":0,"time_left":null,"hide_difficulty":null,"has_tracks":true,"archived":false,"leaderboard_type":"country","leaderboard_format":"","kind":"","leaderboard_freeze_time":null,"show_penalty":null,"submitted_hackers_count":90357,"contest_message":null,"track":null,"hide_navigation":null,"hide_leaderboard":null,"categories":[{"id":3,"name":"Algorithms","slug":"algorithms","dynamic_data":{"challenges_count":312,"submissions_count":810859,"maximum_score":18096.0784},"categories_count":16,"challenges_count":348,"hacker_progress":null,"children":[{"id":43,"name":"Warmup","slug":"warmup"},{"id":38,"name":"Arrays and Sorting","slug":"arrays-and-sorting"},{"id":36,"name":"Search","slug":"search"},{"id":35,"name":"Dynamic Programming","slug":"dynamic-programming"},{"id":34,"name":"Strings","slug":"strings"},{"id":33,"name":"Graph Theory","slug":"graph-theory"},{"id":32,"name":"Data Structures","slug":"data-structures"},{"id":31,"name":"Cryptography","slug":"cryptography"},{"id":52,"name":"Number Theory","slug":"number-theory"},{"id":30,"name":"Bit Manipulation","slug":"bit-manipulation"},{"id":29,"name":"NP Complete problems","slug":"np-complete-problems"},{"id":47,"name":"Game Theory","slug":"game-theory"},{"id":51,"name":"Combinatorics","slug":"combinatorics"},{"id":53,"name":"Probability","slug":"probability"},{"id":54,"name":"Geometry","slug":"geometry"},{"id":55,"name":"Summations and Algebra","slug":"summations-and-algebra"}]},{"id":2,"name":"Artificial Intelligence","slug":"ai","dynamic_data":{"challenges_count":74,"submissions_count":89062,"maximum_score":3734.6357000000003},"categories_count":9,"challenges_count":74,"hacker_progress":null,"children":[{"id":8,"name":"Bot Building","slug":"introduction"},{"id":9,"name":"A* Search","slug":"astar-search"},{"id":10,"name":"Alpha Beta Pruning","slug":"alpha-beta-pruning"},{"id":14,"name":"Combinatorial Search Theory","slug":"combinatorial-search-theory"},{"id":13,"name":"Richman Games","slug":"richman-games"},{"id":12,"name":"Cellular Automaton Games","slug":"cellular-automaton-games"},{"id":11,"name":"Statistics and Machine Learning","slug":"machine-learning"},{"id":44,"name":"Digital Image Analysis","slug":"image-analysis"},{"id":49,"name":"Natural Language Processing","slug":"nlp"}]},{"id":4,"name":"Miscellaneous","slug":"miscellaneous","dynamic_data":{"challenges_count":61,"submissions_count":94478,"maximum_score":579.509},"categories_count":5,"challenges_count":25,"hacker_progress":null,"children":[{"id":37,"name":"Regex","slug":"regex"},{"id":42,"name":"Python Tutorials","slug":"python-tutorials"},{"id":39,"name":"Linked Lists","slug":"linked-lists"},{"id":25,"name":"Code Golf","slug":"normal-languages"},{"id":24,"name":"Esoteric Languages","slug":"esoteric-languages"}]},{"id":5,"name":"Functional Programming","slug":"fp","dynamic_data":{"challenges_count":57,"submissions_count":30179,"maximum_score":2076.0},"categories_count":8,"challenges_count":57,"hacker_progress":null,"children":[{"id":27,"name":"Introduction","slug":"intro"},{"id":26,"name":"Recursion","slug":"recursion"},{"id":45,"name":"Data Structure","slug":"ds"},{"id":40,"name":"Memoization And Dynamic Programming","slug":"dp"},{"id":50,"name":"Persistent Data Structure","slug":"persistent-ds"},{"id":41,"name":"Miscellaneous","slug":"misc"},{"id":46,"name":"Parsers","slug":"parsers"},{"id":48,"name":"Interpreter and Compilers","slug":"compilers"}]},{"id":6,"name":"The Linux Shell","slug":"shell","dynamic_data":{"challenges_count":27,"submissions_count":7626,"maximum_score":47.0},"categories_count":2,"challenges_count":27,"hacker_progress":null,"children":[{"id":56,"name":"Bash Tutorials","slug":"bash"},{"id":57,"name":"Intro to Text Processing Utilities","slug":"textpro"}]}],"primary_tags":[{"id":6,"is_track":true,"name":"Sorting","slug":"sorting","weightage":1.0},{"id":7,"is_track":true,"name":"Search","slug":"search","weightage":2.0},{"id":8,"is_track":true,"name":"Combinatorial Search Theory","slug":"combinatorial-search-theory","weightage":3.0},{"id":9,"is_track":true,"name":"Richman Games","slug":"richman-games","weightage":4.0},{"id":10,"is_track":true,"name":"Dynamic Programming","slug":"dynamic-programming","weightage":6.0},{"id":11,"is_track":true,"name":"Graph Theory","slug":"graph-theory","weightage":7.0},{"id":12,"is_track":true,"name":"Strings","slug":"strings","weightage":8.0},{"id":13,"is_track":true,"name":"Math","slug":"maths","weightage":9.0},{"id":14,"is_track":true,"name":"Bit Manipulation","slug":"bit-manipulation","weightage":10.0},{"id":49,"is_track":true,"name":"NP Complete problems","slug":"np-complete-problems","weightage":12.0},{"id":57,"is_track":false,"name":"Normal Languages","slug":"normal-languages","weightage":0.0},{"id":58,"is_track":true,"name":"Esoteric Languages","slug":"esoteric-languages","weightage":0.0}]},"messages":[],"profile":{"id":198798,"username":"praenato14","country":"United States","school":"Pennsylvania State University, University Park","languages":null,"created_at":"2014-02-26T17:23:28Z","email":"praenato14@gmail.com","fb_uid":null,"gh_uid":"1489462","li_uid":null,"is_admin":false,"avatar":"https://www.filepicker.io/api/file/cFosgAfcSl6PyhbSFG97/convert?w=80&h=80","website":null,"short_bio":"I joined this site to give me some direction on intentionally practicing programming.  I currently work as a Big Data software engineer.","name":"Josiah","hacko_amount":100,"company":"DST Systems","is_campus_rep":false,"local_language":"English","address":"","has_avatar_url":true,"hide_account_checklist":null,"errors":{},"invites_remaining":10,"confirmed":true,"facebook_allow_opengraph":null,"tsize":"L","is_migrated":false,"facebook_opengraph_access_available":null,"promised_login_time":null,"last_logout_feedback":null,"chat_enabled":true,"tour_done":true,"username_autoset":false,"key_prefix":"198798-f2947f87780dd5583c016766ddff0e76391a7499","current_streak":0,"notifications_url":"https://notifications.hackerrank.com/subscribe/198798-a0b912525c6b4759b158d707b17deaa1369cbd9d","resume_url":null,"phone":null,"blog_url":null,"github_url":null},"timestamp":1409836181,"tracks":{"ai":{"descriptions":"Develop intelligent agents. Challenges related to bot-building, path planning, search techniques and Game Theory. Exercise your creativity in heuristic design.\n","name":"Artificial Intelligence","priority":4,"slug":"ai","dynamic_data":{"challenges_count":74,"submissions_count":89062,"maximum_score":3734.6357000000003},"categories_count":9,"challenges_count":74,"hacker_progress":{"score":0.0,"title":"O(2<sup>N<\/sup>)"}},"algorithms":{"descriptions":"The true test of problem solving: when one realizes that time and memory aren't infinite.\n","name":"Algorithms","priority":5,"slug":"algorithms","dynamic_data":{"challenges_count":312,"submissions_count":810859,"maximum_score":18096.0784},"categories_count":16,"challenges_count":348,"hacker_progress":{"score":1.0,"title":"O(2<sup>N<\/sup>)"}},"miscellaneous":{"descriptions":"There's something about brevity. What is the shortest possible program which you can write?","name":"Miscellaneous","priority":2,"slug":"miscellaneous","dynamic_data":{"challenges_count":61,"submissions_count":94478,"maximum_score":579.509},"categories_count":5,"challenges_count":25,"hacker_progress":{"score":0.0,"title":"O(2<sup>N<\/sup>)"}},"fp":{"descriptions":"The art of programming with expressions and functions. Experience the challenge of programming without state. A good paradigm for those interested in Map-Reduce and parallel computing.","name":"Functional Programming","priority":1,"slug":"fp","dynamic_data":{"challenges_count":57,"submissions_count":30179,"maximum_score":2076.0},"categories_count":8,"challenges_count":57,"hacker_progress":{"score":0.0,"title":"O(2<sup>N<\/sup>)"}},"shell":{"descriptions":"Bash and tools available the command line - are much more powerful tool than you may ever have realized!","name":"The Linux Shell","priority":0,"slug":"shell","dynamic_data":{"challenges_count":27,"submissions_count":7626,"maximum_score":47.0},"categories_count":2,"challenges_count":27,"hacker_progress":{"score":0.0,"title":"O(2<sup>N<\/sup>)"}}}};
+      HR.MANIFEST_HASH = "494e22a3d06f3e69718386886e2104b0ef54da64";
+    </script>
+
+    <!-- Stylesheets -->
+    <link href="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/libraries-ee2b5447d4ea92e562cca2f5ce5c8c8f.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/hackerrank-core-e686b7e2a3f0fd181a8bfc984162ea8f.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/dashboard-92a2e603d757d32f2b510b6e3a89190d.css" media="all" rel="stylesheet" type="text/css" />
+
+    <!-- Javascripts -->
+    <script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/libraries-2d64484b50323417ccfe0b59dc9a5a58.js" type="text/javascript"></script>
+    <script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/codeshell/dist/codeshell-3eb7e2a3cc21c555001da4111c5a0242.js" type="text/javascript"></script>
+    <script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/hackerrank-928bcdd4ba0083e9441f1ad68de2113c.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function set_manifest(manifest) {
+            HR.MANIFEST = manifest;
+        }
+    </script>
+    <script src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/set-manifest-494e22a3d06f3e69718386886e2104b0ef54da64.js" type="text/javascript"></script>
+
+
+    <script data-main="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/dashboard-eded5bf5c5a537d5e8c1bd6d43e2ee25.js" src="https://d3keuzeb2crhkn.cloudfront.net/hackerrank/assets/require-8a6e4585ab57a6d1ba1e87ffef2b5d44.js"></script>
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://www.hackerrank.com/rest/blogs.rss" />
+
+</head>
+<body id="HackerRank-main">
+    <script type="text/template" id="navigation">
+    <header id="page-header">
+        <span class="hr_slide-away-element sidebar_toggle pull-left" id="sidebarToggle"><a class="hr_sidebar-menu-link"><i class="icon-menu-small icon--single"></i></a></span>
+        <nav class="page-nav container navbar">
+            <span class="nav-logo"></span>
+            <% if (!HR.PREFETCH_DATA['onboarding']) { %>
+                <span class="nav-login-patch"></span>
+                <span class="nav-buttons"></span>
+            <% } else { %>
+                <span class="nav-login-patch" style="display: none"></span>
+                <span class="nav-buttons" style="display: none"></span>
+            <% } %>
+        </nav>
+    </header>
+</script>
+
+<script type="text/template" id="nav-buttons">
+    <% if (profile && profile.isLoggedIn()) { %>
+    <ul class="page_header_navigation pull-right nav btn-group">
+        <li class="hide-in-private-contest notify_dropdown dropdown" id="tab-profile">
+            <a class="cursor backbone nav-link hr_nav_messages_link" data-toggle="dropdown">
+                <i class="icon-chat"></i>
+                <span class="indicator number-indicator hr_messages_count"></span>
+            </a>
+            <div class="dropdown-menu large" id="notify_messages">
+            </div>
+        </li>
+        <li class="dropdown notify_dropdown" id="tab-profile">
+            <a class="cursor backbone nav-link hr_nav_notifications_link" data-toggle="dropdown">
+                <i class="icon-megaphone"></i>
+                <span class="indicator number-indicator hr_notifications_count"></span>
+            </a>
+            <div class="dropdown-menu large" id="notify_broadcasts">
+                <div class="head">
+                    <strong>System Broadcasts</strong>
+                    <a class="hr_archive_all pull-right">Archive all</a>
+                </div>
+                <ul class="hr_nav_notifications_list">
+                </ul>
+                <div class="final">
+                    <a class="backbone" href="/notifications">Show All</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <% } %>
+    <span class="search_form pull-right challenges_search"></span>
+</script>
+
+<script type="text/template" id="nav-search">
+    <div class="hide-in-private-contest search-input input-icon">
+        <input type="text" id="search-text" class="search-query" autocomplete="off">
+        <i class="icon-search"></i>
+    </div>
+    <div class="hide-in-private-contest search-result hide">
+        <ul class="unstyled"></ul>
+    </div>
+</script>
+
+<script type="text/template" id="nav-login-patch">
+    <% if (profile && profile.isLoggedIn()) { %>
+    <div class="admin-dropdown page_header_dropdown-toggle pull-right" id="profile-menu">
+        <a class="backbone dropdown-toggle page_header-userbtn" href="" data-toggle="dropdown">
+            <% if (_profile.avatar) { %>
+            <img src="<%= _profile.avatar %>" height="25" width="25" class="avatar"
+                 onerror="this.onerror=null; this.src='https://d3rpyts3de3lx8.cloudfront.net/hackerrank/assets/gravatar.jpg';">
+            <% } %>
+            <%= _profile.username %>
+            <span class="team-name"></span>
+            <i class="icon-down-open-mini"></i>
+        </a>
+        <ul class="unstyled dropdown-menu page_header_dropdown">
+            <li class="hide-in-private-contest navigation_hackos navigation_hackos-link backbone" href="/<%= _profile.username%>/hackos"><span class="navigation_hackos-heading">Hackos:</span><span class="navigation_hackos-count"><%= _profile.hacko_amount %></span></li>
+            <li class="hide-in-private-contest"><a class="backbone" href="/<%= _profile.username %>">Profile</a></li>
+            <li class="hide-in-private-contest"><a class="backbone" href="<%= HR.appController.get_current_contest_namespace() %>/settings">Settings</a></li>
+            <li class="hide-in-private-contest"><a class="backbone" href="/inbox">Inbox</a></li>
+            <li  class="hide-in-private-contest"id="tab-notifications">
+              <a class="backbone" href="<%= HR.appController.get_current_contest_namespace() %>/notifications">Notifications <span id="notifications-count"></span></a>
+            </li>
+            <li class="hide-in-private-contest"><a class="backbone" href="/administration">Administration</a></li>
+            <li><a class="logout-button">Logout</a></li>
+        </ul>
+    </div>
+    <% } else { %>
+    <div id="tab-login" class="login-prompt admin-dropdown page_header_dropdown-toggle pull-right">
+        <a href="/auth/login/<%= HR.appController.get_current_contest_slug() %>" class="login nav-btn page_header-userbtn">
+            Log In
+        </a>
+    </div>
+    <% } %>
+</script>
+
+    <script type="text/template" id="contest-navigation">
+
+    <div id="contest-nav" class="container">
+        <div class="breadcrumbs breadcrumbs-challenge">
+        <ul>
+            <li class="breadcrumb"><a href="/" class="backbone"><i class="icon-home icon--single"></i></a></li>
+            <% if (contest_slug!= 'master') { %>
+                <li class="breadcrumb"><a href="/contests" class="backbone">Contests</a></li>
+                <% if(contest.get('track')) { %>
+                    <li class="breadcrumb"><a class="backbone" href="/categories/<%= contest.get('track').slug %>/contests"><%= contest.get('track').name %></a></li>
+                <% } %>
+                <li class="breadcrumb active">
+                    <a class="backbone" href="/contests/<%= contest_slug %>/challenges" class="color-dark"><%= contest.get('name') %></a>
+                    <span class="breadcrumb_sub large">
+                        <a class="backbone" href="/contests/<%= contest_slug %>/leaderboard"><i class="icon--grey icon-trophy icon--single pmL pmR"></i></a>
+                        <a class="backbone" href="/contests/<%= contest_slug %>/submissions/all"><i class="icon--grey icon-list-bullet-small icon--single pmL pmR"></i></a>
+                    </span>
+                    <% if (contest.running()) { %>
+                        <span class="plL color-alt-green">
+                            <i class="status-indicator active mmR"></i>
+                            <span class="countdowntimer"></span>
+                        </span>
+                    <% } else if (contest.ended()) { %>
+                        <span class="plL color-orange">
+                            <i class="status-indicator completed mmR"></i>
+                            Leaderboard Locked
+                        </span>
+                        <span class="help-prompt mmL">
+                            <i class="icon-info-circled"></i>
+                            <span class="help-text">
+                                The contest has ended. Future submissions will not affect the leaderboard.
+                            </span>
+                        </span>
+                    <% } %>
+                </li>
+            <% } else { %>
+                <li class="breadcrumb" id="challenge-nav-track-container"></li>
+            <% } %>
+        </ul>
+        </div>
+    </div>
+</script>
+
+    <script type="text/template" id="side-navigation">
+    <nav class="page_navigation-sidebar expand hr_slide-away-element" id="sidebar">
+        <div class="mini-dash" style="display:none">
+        </div>
+        <ul class="unstyled sidebar_nav-list">
+            <li class="hide-in-private-contest" id="ob-contests-link"><a href="/challenges" class="backbone"><i class="nav-icon icon-doc-text"></i><span class="nav-text">All Challenges</span></a></li>
+            <li class="hide-in-private-contest" ><a href="/contests" class="backbone"><i class="nav-icon icon-clock"></i><span class="hr_sidebar_contest_indicator indicator"></span><span class="nav-text">Contests</span></a></li>
+
+            <!--<li class="hide-in-private-contest"><a href=""><i class="nav-icon icon-user"></i><span class="nav-text">Teams</span></a></li>-->
+            <li class="hide-in-private-contest"><a href="/leaderboard" class="backbone"><i class="nav-icon icon-trophy"></i><span class="nav-text">Leaderboard</span></a></li>
+            <li class="hide-in-private-contest" ><a href="/submissions" class="backbone"><i class="nav-icon icon-list-bullet-small"></i><span class="nav-text">Submissions</span></a></li>
+            <li class="hide-in-private-contest" ><a href="/inbox" class="backbone"><i class="nav-icon icon-chat"></i><span class="nav-text">Messages</span></a></li>
+        </ul>
+    </nav>
+</script>
+
+
+    <div id="wrapper">
+        <div id="navigation"></div>
+          <div id="side-navigation"></div>
+        <div id="verifyaccount" class="container"></div>
+        <div id="ajax-msg-wrap"></div>
+        <!--<div id="countdowntimer" style="display: none;"></div>-->
+        <div id="contest-navigation"></div>
+        <div id="flash"></div>
+        <div id="submission-success-messages"></div>
+        <div id="onboarding3-content"></div>
+        <div id="contestwide-broadcast"></div>
+        <div id="content"></div>
+        <div id="hacker"></div>
+    </div>
+    <footer class="page_footer">
+    <div class="container">
+        <div class="text-center">
+            Join us on IRC at <a target="_blank" class="page_footer-IRC" href="http://webchat.freenode.net/?channels=hackerrank">#hackerrank</a> on freenode for hugs or bugs.
+            <br>
+            <p style="font-size: 14px; margin-top: 5px; margin-bottom: 0px;"><span class="internal-links"><a target="_blank" href="/calendar" class="calendar">Contest Calendar</a> | <a target="_blank" href="/blog" class="blog">Blog</a> | <a target="_blank" href="/scoring" class="scoring">Scoring</a> | <a target="_blank" href="/environment" class="environment">Environment</a> | <a target="_blank" href="/faq" class="faq">FAQ</a> |</span> <a target="_blank" href="/aboutus">About Us</a> | <a target="_blank" href="/careers">Careers</a> | <a target="_blank" href="/privacy">Privacy Policy</a> | <a href="#" class="featureRequestButton">Request a Feature</a></p>
+        </div>
+    </div>
+</footer>
+<script>
+    if ($) {
+        $(document).ready(function() {
+            $(".featureRequestButton").bind("click",function(e){
+                e.preventDefault();
+                feature = new HR.util.ShowFeatureRequestDialog();
+                feature.render();
+            });
+        });
+    }
+</script>
+<script>
+    $('.with-help').on({
+        'focus' : function() {
+           $(this).siblings('.sub-help').addClass('in');
+         },
+         'blur' : function() {
+           $(this).siblings('.sub-help').removeClass('in');
+         }
+    });
+</script>
+
+    <ol id="hr_tour-intro-tour" class="hide">
+        <li data-class="hr_tour-challenge-name"  data-options="tipLocation:bottom"><h5 class="walkthrough-header">Challenge Walkthrough</h5><span class="walkthrough-text">Let's walk through this sample challenge and explore the features of the code editor.</span><span class="walkthrough-progress">1 of 6</span></li>
+        <li data-class="hr_tour-problem-statement" data-options="tipLocation:top"><h5 class="walkthrough-header">Review the problem statement</h5><span class="walkthrough-text">Each challenge has a problem statement that includes sample inputs and outputs. Some challenges include additional information to help you out.</span><span class="walkthrough-progress">2 of 6</span></li>
+        <li data-class="hr_tour-select-language" data-options="tipLocation:left"><h5 class="walkthrough-header">Choose a language</h5><span class="walkthrough-text">Select the language you wish to use to solve this challenge.</span><span class="walkthrough-progress">3 of 6</span></li>
+        <li data-class="hr_tour-code-solution" data-options="tipLocation:top"><h5 class="walkthrough-header">Enter your code</h5><span class="walkthrough-text">Code your solution in our custom editor or code in your own environment and upload your solution as a file.</span><span class="walkthrough-progress">4 of 6</span></li>
+        <li data-class="hr_tour-compile-test" data-options="tipLocation:left"><h5 class="walkthrough-header">Test your code</h5><span class="walkthrough-text">You can compile your code and test it for errors and accuracy before submitting.</span><span class="walkthrough-progress">5 of 6</span></li>
+        <li data-class="hr_tour-submit-code" data-button="Done" data-options="tipLocation:left"><h5 class="walkthrough-header">Submit to see results</h5><span class="walkthrough-text">When you're ready, submit your solution! Remember, you can go back and refine your code anytime.</span><span class="walkthrough-progress">6 of 6</span></li>
+    </ol>
+    <ol id="hr_tour-intro-part-2-tour" class="hide">
+        <li data-class="hr_tour-leaderboard">Check your score</li>
+    </ol>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            if (HR.PREFETCH_DATA.onboarding) {
+                $(".page_footer").hide()
+            }
+        })
+    </script>
+</body>
+
+  
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+    (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();
+</script>
+
+<!-- Mixpanel -->
+<script type="text/javascript">
+    (function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==
+typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
+    mixpanel.init("bcb75af88bccc92724ac5fd79271e1ff");
+
+    mixpanel.identify(jsCookies.get("hackerrank_mixpanel_token"));
+</script>
+
+<!-- Chartbeat -->
+<script type="text/javascript">
+  var _sf_async_config = {
+    uid: 34206,
+    domain: "hackerrank.com",
+    useCanonical: true
+  };
+  (function() {
+    function loadChartbeat() {
+      window._sf_endpt = (new Date()).getTime();
+      var e = document.createElement('script');
+      e.setAttribute('language', 'javascript');
+      e.setAttribute('type', 'text/javascript');
+      e.setAttribute('src','//static.chartbeat.com/js/chartbeat.js');
+      document.body.appendChild(e);
+    };
+    var oldonload = window.onload;
+    window.onload = (typeof window.onload != 'function') ?
+      loadChartbeat : function() { oldonload(); loadChartbeat(); };
+  })();
+</script>
+
+
+
+<!-- Filepicker -->
+<script type="text/javascript">
+  (function(a){if(window.filepicker){return}var b=a.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===a.location.protocol?"https:":"http:")+"//api.filepicker.io/v1/filepicker.js";var c=a.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);var d={};d._queue=[];var e="pick,pickMultiple,read,write,writeUrl,export,convert,store,storeUrl,remove,stat,setKey,constructWidget,makeDropPane".split(",");var f=function(a,b){return function(){b.push([a,arguments])}};for(var g=0;g<e.length;g++){d[e[g]]=f(e[g],d._queue)}window.filepicker=d})(document);
+  filepicker.setKey("ApehXMbvXTWqWab7OmMr9z");
+</script>
+
+<script type="text/javascript">
+adroll_adv_id = 'W2R3HE5UDBBVTJG3E7ZFRP';
+adroll_pix_id = 'ATGIUYAAYJEHNKTJDQ43Z4';
+(function () {
+    var oldonload = window.onload;
+    window.onload = function(){
+        __adroll_loaded=true;
+        var scr = document.createElement("script");
+        var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+        scr.setAttribute('async', 'true');
+        scr.type = "text/javascript";
+        scr.src = host + "/j/roundtrip.js";
+        ((document.getElementsByTagName('head') || [null])[0] ||
+         document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+        if(oldonload){oldonload()}};
+}());
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        function we_are_hiring() {
+            lines = [
+                "===============================================================================",
+                ",--.  ,--.              ,--.                 ,------.                 ,--.     ",
+                "|  '--'  | ,--,--. ,---.|  |,-. ,---. ,--.--.|  .--. ' ,--,--.,--,--, |  |,-.  ",
+                "|  .--.  |' ,-.  || .--'|     /| .-. :|  .--'|  '--'.'' ,-.  ||      \\|     /  ",
+                "|  |  |  |\\ '-'  |\\ `--.|  \\  \\\\   --.|  |   |  |\\  \\ \\ '-'  ||  ||  ||  \\  \\  ",
+                "`--'  `--' `--`--' `---'`--'`--'`----'`--'   `--' '--' `--`--'`--''--'`--'`--' ",
+                "===============================================================================",
+                "  You opened the console! Know some code, do you? Want to work for one of the  ",
+                "  best startups around? https://www.hackerrank.com/careers                     ",
+                "==============================================================================="
+            ]
+            for (i = 0; i < lines.length; i ++) {
+                console.log(lines[i]);
+            }
+        }
+        setTimeout(we_are_hiring, 5000)
+    });
+</script>
+
+</html>
