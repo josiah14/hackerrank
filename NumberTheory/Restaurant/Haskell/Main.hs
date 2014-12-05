@@ -2,7 +2,7 @@ import System.IO (readLn, getLine)
 import Control.Monad (replicateM)
 
 main :: IO ()
-main = getNumLoaves >>= getLoafDimensions >>= mapM_ (print . largestSide)
+main = getNumLoaves >>= getLoafDimensions >>= mapM_ (print . minNumberOfSlices)
 
 getNumLoaves :: IO Int
 getNumLoaves = readLn
@@ -26,8 +26,8 @@ squares = map (^2) [1..1000]
 squareRoot :: Int-> Int
 squareRoot squaredNum = floor . sqrt $ fromIntegral squaredNum
 
-largestSide :: (Int, Int) -> Int
-largestSide (l, b) =
+minNumberOfSlices :: (Int, Int) -> Int
+minNumberOfSlices (l, b) =
   let area                        = l * b
       isPerfectSliceDimension num = area `rem` num + b `rem` squareRoot num + l `rem` squareRoot num == 0
       largestSquare               = last $ filter isPerfectSliceDimension $ take (min l b) squares
