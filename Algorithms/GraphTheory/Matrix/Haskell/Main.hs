@@ -142,7 +142,7 @@ fromKingdomTree (KingdomTree kingdom) = kingdom
 findKingdomNode :: City -> [(City, [Road])] -> ((City, [Road]), [(City, [Road])])
 findKingdomNode topCity partialKingdom =
   let (beforeMatched, afterMatched) = L.break matchesTopCity partialKingdom
-  in if null afterMatched then (((-1), []), partialKingdom)
+  in if null afterMatched then (((-1), []),[])
      else ((head afterMatched), beforeMatched ++ tail afterMatched)
   where matchesTopCity node = topCity == fst node
 
@@ -167,10 +167,15 @@ splitNumbers = map $ T.splitOn $ T.pack " "
 readNumbers :: [[T.Text]] -> [[Int]]
 readNumbers = map $ map $ read . T.unpack
 
-solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> Int64
+solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> [Road]
 solve (_, _, cities, kingdomTree, machines) = let machinePairs = pairUpMachines machines
                                                   kingdom = fromKingdomTree kingdomTree
-                                              in sumRoadDestroyTimes $ roadsToDestroy machinePairs kingdom
+                                              in roadsToDestroy machinePairs kingdom
+
+-- solve :: (CityCount Int, MachineCount Int, Cities, KingdomTree [(City, [Road])], Machines [Machine Int]) -> Int64
+-- solve (_, _, cities, kingdomTree, machines) = let machinePairs = pairUpMachines machines
+--                                                   kingdom = fromKingdomTree kingdomTree
+--                                               in sumRoadDestroyTimes $ roadsToDestroy machinePairs kingdom
 
 pairUpMachines :: Machines [Machine City] -> [(City, City)]
 pairUpMachines machines = allDistinctPairs $ fromMachines machines
@@ -211,7 +216,7 @@ findPath startCity endCity kingdom = findPath' (-1) startCity endCity kingdom
                      if isJust endNode then Just $ maybeToList endNode
                      else
                        let path =
-                             let tmpPath = map (\road -> findPath' startCity (otherCity road) endCity' restOfKingdom)
+                             let tmpPath = map (\road -> findPath' startCity' (otherCity road) endCity' restOfKingdom)
                                              $ snd activeNode
                              in if null $ catMaybes tmpPath then [] else head $ catMaybes tmpPath
                            adjacentRoads = filter (\road -> otherCity road /= previousCity) $ snd activeNode
