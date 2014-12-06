@@ -1,6 +1,5 @@
 import System.IO (readLn, getLine)
 import Control.Monad (replicateM)
-import Control.Parallel.Strategies
 
 main :: IO ()
 main = getNumLoaves >>= getLoafDimensions >>= mapM_ (print . minNumberOfSlices)
