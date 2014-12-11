@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <stdbool.h>
 
 void free_2d_array(int** arr) {
-  pu  int i = 0;
-  puts("i initialized");
+  int i = 0;
   while (arr[i][0]) {
     free(arr[i]);
     i++;
@@ -79,6 +80,27 @@ int** get_slices() {
 error:
   free_2d_array(slices);
   flag_error("ERROR: Could not parse line entered into a 2 integer array representing the slice's dimensions.");
+}
+
+int* get_squares(num) {
+  int* squares = (int*) malloc(num * sizeof(int));
+
+  int i;
+  for (i = 1; i < num + 1; i++) {
+    squares[i - 1] = i * i;
+  }
+}
+
+bool is_perfect_slice_dimension(length, width, square) {
+  int area = length * width;
+  int num = sqrt(square);
+
+  return !((area % square) || (length % num) || (width % num));
+}
+
+int* filter( bool (*predicate)(int), int* list ) {
+  // TODO: Implement
+  return NULL;
 }
 
 int main() {
