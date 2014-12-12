@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 void free_2d_array(int** arr) {
   int i = 0;
@@ -34,6 +35,7 @@ int read_num_slices() {
 
 error:
   flag_error("ERROR: Could not parse the number of entries from first input line.");
+  return 1;
 }
 
 // Gets a single line from stdin and attempts to parse it into a 2D int array representing the dimensions of a slice.
@@ -58,8 +60,8 @@ int** get_slices() {
   static int** slices;
   slices = (int**) malloc((num_slices + 1) * sizeof(int*));
 
-  int i = 0;
-  for (i; i < num_slices; i++) {
+  int i;
+  for (i = 0; i < num_slices; i++) {
     slices[i] = (int*) calloc(2, sizeof(int));
     memcpy(slices[i], read_slice_dimension(), 2 * sizeof(int));
 
@@ -80,27 +82,64 @@ int** get_slices() {
 error:
   free_2d_array(slices);
   flag_error("ERROR: Could not parse line entered into a 2 integer array representing the slice's dimensions.");
+  return NULL;
 }
 
-int* get_squares(num) {
-  int* squares = (int*) malloc(num * sizeof(int));
+// gives 'num_elems' squares in descending order
+int* get_squares(int num_elems) {
+  int* squares = (int*) malloc(num_elems * sizeof(int));
 
   int i;
-  for (i = 1; i < num + 1; i++) {
-    squares[i - 1] = i * i;
+  for (i = 0; i < num_elems; i++) {
+    int num = num_elems - i;
+    squares[i] = num * num;
   }
+
+  return squares;
 }
 
-bool is_perfect_slice_dimension(length, width, square) {
-  int area = length * width;
+bool is_perfect_slice_dimension(int slice[2], int square) {
+  int area = slice[0] * slice[1];
   int num = sqrt(square);
 
-  return !((area % square) || (length % num) || (width % num));
+  return !((area % square) || (slice[0] % num) || (slice[1] % num));
 }
 
-int* filter( bool (*predicate)(int), int* list ) {
-  // TODO: Implement
+// is in the 'find' function in Haskell, takes a predicate and a list and returns the first value which evaluates to
+// true.  The found argument is used to determine whether a matching element was found so that a list containing
+// any integers could be used.
+int find( bool (*predicate)(int), int* list, int num_elems, bool* found) {
+  int value = 0;
+
+  *found = false;
+  int i;
+  for (i = 0; i < num_elems; i++) {
+    if (predicate(list[i])) {
+      value = list[i];
+      *found = true;
+      break;
+    }
+  }
+
+  return value;
+}
+
+void* curry(void* f, int num_args, ...) {
+  // TODO: figure out how to pass back a pointer to the curried function
   return NULL;
+}
+
+int min_number_of_slices(int dimensions[2]) {
+  int num_slices;
+  if (dimensions[0] == dimensions[1]) {
+    num_slices = 1;
+  } else {
+    int num_squares = dimensions[0] < dimensions[1] ? dimensions[0] : dimensions[1];
+    int* squares = (int*) malloc(num_squares * sizeof(int));
+    squares = get_squares(num_squares);
+    int largest_square = find(&is_perfect_slice_dimension);
+  }
+
 }
 
 int main() {

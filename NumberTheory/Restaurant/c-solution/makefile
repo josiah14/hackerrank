@@ -1,2 +1,2 @@
 restaurant: restaurant.c
-	gcc -o restaurant restaurant.c -I . -lm
+	gcc -O2 -o restaurant restaurant.c -I . -lm
