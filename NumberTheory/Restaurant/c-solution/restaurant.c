@@ -85,61 +85,43 @@ error:
   return NULL;
 }
 
-// gives 'num_elems' squares in descending order
-int* get_squares(int num_elems) {
-  int* squares = (int*) malloc(num_elems * sizeof(int));
-
-  int i;
-  for (i = 0; i < num_elems; i++) {
-    int num = num_elems - i;
-    squares[i] = num * num;
-  }
-
-  return squares;
+int next_square(int index, int num_elems) {
+  int num = num_elems - index;
+  return num * num;
 }
 
-bool is_perfect_slice_dimension(int slice[2], int square) {
+bool is_perfect_slice_dimension(int square, int slice[2]) {
   int area = slice[0] * slice[1];
   int num = sqrt(square);
 
   return !((area % square) || (slice[0] % num) || (slice[1] % num));
 }
 
-// is in the 'find' function in Haskell, takes a predicate and a list and returns the first value which evaluates to
-// true.  The found argument is used to determine whether a matching element was found so that a list containing
-// any integers could be used.
-int find( bool (*predicate)(int), int* list, int num_elems, bool* found) {
-  int value = 0;
+int find_largest_square(int slice_dimension[2]) {
+    int num_squares = slice_dimension[0] < slice_dimension[1] ? slice_dimension[0] : slice_dimension[1];
 
-  *found = false;
-  int i;
-  for (i = 0; i < num_elems; i++) {
-    if (predicate(list[i])) {
-      value = list[i];
-      *found = true;
-      break;
+    int i;
+    for (i = 0; i < num_squares; i++) {
+      int square = next_square(i, num_squares);
+      if (is_perfect_slice_dimension(square, slice_dimension)) {
+        return square;
+      }
     }
-  }
 
-  return value;
+  // if we get here, there was an error.
+  return -1;
 }
 
-void* curry(void* f, int num_args, ...) {
-  // TODO: figure out how to pass back a pointer to the curried function
-  return NULL;
-}
-
-int min_number_of_slices(int dimensions[2]) {
-  int num_slices;
-  if (dimensions[0] == dimensions[1]) {
+int find_min_number_of_slices(int slice_dimension[2]) {
+  int num_slices = 0;
+  if (slice_dimension[0] == slice_dimension[1]) {
     num_slices = 1;
   } else {
-    int num_squares = dimensions[0] < dimensions[1] ? dimensions[0] : dimensions[1];
-    int* squares = (int*) malloc(num_squares * sizeof(int));
-    squares = get_squares(num_squares);
-    int largest_square = find(&is_perfect_slice_dimension);
+    int area = slice_dimension[0] * slice_dimension[1];
+    num_slices = area / find_largest_square(slice_dimension);
   }
 
+  return num_slices;
 }
 
 int main() {
@@ -147,10 +129,7 @@ int main() {
 
   int i = 0;
   while (slices[i][0]) {
-    int j;
-    for (j = 0; j < 2; j++) {
-      printf("%i\n", slices[i][j]);
-    }
+    printf("%i\n", find_min_number_of_slices(slices[i]));
     i++;
   }
 
