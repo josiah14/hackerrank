@@ -21,7 +21,6 @@ def greatest_common_divisor(slice_dimension)
     length = remainder
   end
 
-  puts width
   width
 end
 
